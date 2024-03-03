@@ -1,46 +1,50 @@
+#define BLYNK_TEMPLATE_ID "TMPL34SRISORW"
+#define BLYNK_TEMPLATE_NAME "Poultry Monitoring and Automation System"
+#define BLYNK_AUTH_TOKEN "dJ2_RoSKEgBPtbDnf_K1-5B-qwvhIKIK"
+#define BLYNK_PRINT Serial
+#define DHTPIN 4  // connect to pin 2
+#define val 15  // connect to pin 
 #include <DHT.h>
-
-// Define the type of sensor and the pin it's connected to
-#define DHTPIN 4  // Replace 2 with the actual pin number you've connected the DHT sensor to
+#include <ESP8266WiFi.h> 
+#include <BlynkSimpleEsp8266.h>
 #define DHTTYPE DHT11
-
-// Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
-int val=2;
-void setup() {
-  Serial.begin(9600);
-  pinMode(val,OUTPUT);
-  // Initialize the DHT sensor
-  dht.begin();
-}
-
-void loop() {
-  // Wait a few seconds between measurements.
-  delay(2000);
-
-  // Read temperature and humidity from the sensor.
-  float temperature = dht.readTemperature();
-  
-  // Check if any reads failed and exit early (to try again).
-  if (isnan(temperature)) {
+char ssid[] = "realme C11"; 
+char pass[] = "rithanya";
+char auth[] = "dJ2_RoSKEgBPtbDnf_K1-5B-qwvhIKIK";
+void temperature()
+{
+    float temperature = dht.readTemperature();
+  if (isnan(temperature)) 
+  {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
-
-  // Print the temperature and humidity to the serial monitor.
   Serial.print("Temperature: ");
   Serial.print(temperature);
   Serial.println(" °C");
-  
-
+  Blynk.virtualWrite(V0, temperature);
   if (temperature>20)
   {
     digitalWrite(val,1);
-
+    Serial.println("Light is on");
   }
   else
   {
     digitalWrite(val,0);
+    Serial.println("Light is off");
   }
   delay(1000);
+}
+void setup() 
+{
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+  dht.begin();
+  pinMode(val,OUTPUT);
+}
+void loop() 
+{
+  Blynk.run();
+  temperature();
 }
