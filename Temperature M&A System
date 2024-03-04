@@ -3,7 +3,7 @@
 #define BLYNK_AUTH_TOKEN "dJ2_RoSKEgBPtbDnf_K1-5B-qwvhIKIK"
 #define BLYNK_PRINT Serial
 #define DHTPIN 4  // connect to pin 2
-#define val 15  // connect to pin 
+int val=D1; 
 #include <DHT.h>
 #include <ESP8266WiFi.h> 
 #include <BlynkSimpleEsp8266.h>
@@ -26,12 +26,12 @@ void temperature()
   Blynk.virtualWrite(V0, temperature);
   if (temperature>20)
   {
-    digitalWrite(val,1);
+    digitalWrite(val,HIGH);
     Serial.println("Light is on");
   }
   else
   {
-    digitalWrite(val,0);
+    digitalWrite(val,LOW);
     Serial.println("Light is off");
   }
   delay(1000);
